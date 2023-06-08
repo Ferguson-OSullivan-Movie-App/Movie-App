@@ -1,0 +1,21 @@
+card,
+.list-group-item {
+    background-color: var(--secondary-color);
+}
+.btn {
+}
+#search-box {
+    background-color: var(--secondary-color);
+}
+.btn-primary {
+    background-color: var(--accent-color);
+    color: var(--dark-accent);
+    outline-color: var(--accent-color);
+}
+.carousel-control-prev-icon,
+.carousel-control-next-icon{
+    background-color: black;
+}
+.carousel-indicators {
+    background-color: black;
+    opacity: 35%;}
