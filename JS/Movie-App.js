@@ -5,87 +5,99 @@
     $(document).ready(function () {
 
         let movieArray = [];
-        let moviePoster = [];
+        let url = `https://freckle-attractive-group.glitch.me/movies`
 
         function getMovieData() {
-            return fetch(`https://freckle-attractive-group.glitch.me/movies`)
+            movieArray = [];
+            return fetch(url)
                 .then((resp) => resp.json())
                 .then((data => {
-                    for (let i = 0; i <= data.length - 1; i++) {
+                    for (let i = 0; i < data.length; i++) {
                         movieArray.push(data[i])
-                        fetch(`http://www.omdbapi.com/?t=${data[i].title}&apikey=${OMDB}`)
-                        .then((resp) => resp.json())
-                        .then((data) => {
-                            moviePoster.push(data.Poster);
-                            console.log(data.Poster)
-                            console.log(moviePoster)
-                        })
-                        // console.log(data[i]);
-                        // console.log(data[i].id);
-                        // console.log(data[i].rating);
-                        // console.log(data[i].title);
                     }
                     $('#movie-card').html(renderMovies(movieArray));
                 }));
-
         }
-
-
 
         getMovieData();
 
-        // let movieDataString = '';
-        console.log(movieArray);
-
-        // buildMovieData(movieArray)
         function buildMovieData(obj) {
-            console.log(movieArray);
             let movieDataString = '';
-                movieDataString = '<div class="col-2 card" id="movie-card">'
-                movieDataString += `<div class=" card-body>`
-                movieDataString += `<h5 class="card-title"> ${obj.rating} </h5>`
-                movieDataString += `<h5 class="card-title"> ${obj.title} </h5>`
-                movieDataString += '</div>'
-                movieDataString += '</div>'
-            console.log(movieDataString);
+            movieDataString = '<div class="col-2 card" id="movie-card">'
+            movieDataString += `<div class=" card-body>`
+            movieDataString += `<h5 class="card-title"> ${obj.rating} </h5>`
+            movieDataString += `<h5 class="card-title"> ${obj.title} </h5>`
+            movieDataString += '</div>'
+            movieDataString += '</div>'
             return movieDataString;
         }
 
-        console.log(moviePoster[0])
-        function renderMovies(objElement) {
+        function renderMovies(objElement, poster) {
             let movieDataString = '';
-            for (let i= 0; i < objElement.length; i++) {
+            for (let i = 0; i < objElement.length; i++) {
                 movieDataString += buildMovieData(objElement[i])
-                // console.log(moviePoster[0])
-                // movieDataString += `<img class="poster" src=${moviePoster[i]} alt="">`
             }
             return movieDataString
         }
 
 
-        function addMovie (e) {
-            e.preventDefault();
+        $('#add-movie-button').on('click', addMovie => {
+            if(($('#movie-ranking').val() > 0) && ($('#movie-ranking').val() < 6)) {
+                let userMovie = {
+                    title: $('#add-movie-box').val(),
+                    rating: $('#movie-ranking').val()
+                }
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userMovie),
+                }
+                fetch(url, options)
+                    .then(response => console.log(response))
+                    .then(getMovieData)
+                    .catch(error => console.error(error));
+            } else {
+                alert('Please Enter A Number Between 1-5');
+            }
+        })
 
-
-        }
-
-        // renderMovies(movieArray);
-
-        // const options = {method: 'GET',
-        //     headers: {accept: 'application/json'}};
-        //
-
+        $('#delete-movie-button').on('click', deleteMovie => {
+            let lastMovie = movieArray.length
+            fetch(`https://freckle-attractive-group.glitch.me/movies/${lastMovie}`, {
+                method: "DELETE",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(getMovieData);
+        })
 
         $('#search-button').on('click', userMovieSearch)
 
-        function userMovieSearch () {
+        function userMovieSearch() {
             let userSearchInput = $('#search-box').val();
-            fetch(`http://www.omdbapi.com/?t=${userSearchInput}&apikey=${OMDB}`)
-                .then(response => response.json())
-                .then(response => console.log(response))
-                .catch(err => console.error(err));
-                // movieArray.push(userSearchInput.title);
+
         }
     });
 })();
 
+
+
+
+
+
+//let userMovie = {
+//                 title: $('#add-movie-box').val(),
+//                 rating: $('#movie-ranking').val()
+//             }
+//             const options = {
+//                 method: 'DELETE',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify(userMovie),
+//             }
+//             fetch(url,options)
+//                 .then(response => response.json())
+//                 .then(getMovieData);
