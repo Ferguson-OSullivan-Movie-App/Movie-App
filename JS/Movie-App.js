@@ -52,16 +52,23 @@
             return movieDataString
         }
 
+
+        function addMovie (e) {
+            e.preventDefault();
+
+
+        }
+
         // renderMovies(movieArray);
 
         // const options = {method: 'GET',
         //     headers: {accept: 'application/json'}};
         //
-        // fetch('https://api.themoviedb.org/3/67da7a691d4363302b9007f99d6f16e2', options)
+        // fetch('http://www.omdbapi.com/?i=tt3896198&apikey=23eb25d6', options)
         //     .then(response => response.json())
         //     .then(response => console.log(response))
         //     .catch(err => console.error(err));
-        //
+
 
 
     });
