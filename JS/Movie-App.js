@@ -64,11 +64,19 @@
         // const options = {method: 'GET',
         //     headers: {accept: 'application/json'}};
         //
-        // fetch('http://www.omdbapi.com/?i=tt3896198&apikey=23eb25d6', options)
-        //     .then(response => response.json())
-        //     .then(response => console.log(response))
-        //     .catch(err => console.error(err));
 
+
+        $('#search-button').on('click', userMovieSearch)
+
+        function userMovieSearch () {
+            let userSearchInput = $('#search-box').val();
+
+            fetch(`http://www.omdbapi.com/?t=${userSearchInput}&apikey=${OMDB}`)
+                .then(response => response.json())
+                .then(response => console.log(response))
+                .catch(err => console.error(err));
+
+        }
 
 
     });
