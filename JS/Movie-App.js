@@ -4,6 +4,10 @@
 
     $(document).ready(function () {
 
+        $(window).on('load', function (){
+            $('.loader-wrapper').fadeOut()
+        })
+
         let movieArray = [];
         let url = `https://freckle-attractive-group.glitch.me/movies`
 
