@@ -15,6 +15,7 @@
         let movieArray = [];
         let movieId = [];
         let url = `https://freckle-attractive-group.glitch.me/movies`
+        let cardBody = $('#movie-cards')
 
         function getMovieData() {
             movieArray = [];
@@ -24,14 +25,10 @@
             return fetch(url)
                 .then((resp) => resp.json())
                 .then((data => {
-                    console.log(data);
                     for (let i = 0; i < data.length; i++) {
                         movieArray.push(data[i])
                         movieId.push(data[i].id)
                     }
-                    console.log(movieArray)
-                    console.log(movieId)
-                    console.log(Math.max(...movieId));
                     $('#movie-cards').html(renderMovies(movieArray));
                     hideLoader()
                 }));
@@ -41,18 +38,18 @@
 
         function buildMovieData(obj) {
             let movieDataString = '';
-            movieDataString = '<div class="col-2 card hover" id="movie-card">'
-            movieDataString += `<div class="card-body>`
-            movieDataString += `<h1 class="card-title custom-title"> ${obj.title} </h1>`
-            movieDataString += `<p class="card-subtitle"> Rating: ${obj.rating} </p>`
+            movieDataString = '<div class="col-5 card hover m-1" id="movie-card">'
+            movieDataString += `<div class="card-body">`
+            movieDataString += `<h3 class="card-title movie-title p-0"> ${obj.title} </h3>`
+            movieDataString += `<h5 class="card-title"> Rating: ${obj.rating} </h5>`
             movieDataString += '</div>'
             movieDataString += `<h5 class="card-id">${obj.id}</h5>`
-            movieDataString += `<button class="btn btn-sm btn-primary deletebtn">Delete</button>`
+            movieDataString += `<button class="btn btn-primary deletebtn">Delete</button>`
             movieDataString += '</div>'
             return movieDataString;
         }
 
-        function renderMovies(objElement, poster) {
+        function renderMovies(objElement) {
             let movieDataString = '';
             for (let i = 0; i < objElement.length; i++) {
                 movieDataString += buildMovieData(objElement[i])
@@ -60,8 +57,8 @@
             return movieDataString
         }
 
-        $('#movie-cards').on('dblclick', '.card', function() {
-            var title = $(this).find('.card-title').text();
+        $('#movie-cards').on('dblclick', '.card', function () {
+            var title = $(this).find('.movie-title').text();
             $('.popUp').toggle();
             $('.selected-movie').text(title);
         })
@@ -80,11 +77,8 @@
                     body: JSON.stringify(userMovie),
                 }
                 fetch(url, options)
-                    .then(response => console.log(response))
                     .then(getMovieData)
                     .catch(error => console.error(error));
-                $('#add-movie-box').val('');
-                $('#movie-ranking').val('');
             } else {
                 alert('Please Enter A Number Between 1-5');
             }
@@ -103,12 +97,10 @@
             }
         })
 
-        $('#movie-cards').on('click', '.deletebtn', function() {
+        $('#movie-cards').on('click', '.deletebtn', function () {
             const $cardElement = $(this).closest('.card');
             const movieId = $cardElement.find('.card-id').text();
-            console.log(movieId);
             const confirmed = confirm('Deleting selected movie.');
-
             if (confirmed) {
                 fetch(`https://freckle-attractive-group.glitch.me/movies/${movieId}`, {
                     method: 'DELETE',
@@ -120,15 +112,28 @@
             }
         });
 
-        $('#search-button').on('click', userMovieSearch)
+        $('#search-button').on('click', searchMovies).on('click', userMovieSearch)
+
+        function searchMovies(e) {
+            e.preventDefault();
+            let searchedMovie = $('#search-box').val();
+            let filteredMovies = [];
+            movieArray.forEach(function (movie) {
+                if (movie.title.toLowerCase().includes(searchedMovie.toLowerCase())) {
+                    filteredMovies.push(movie);
+                }
+            });
+            cardBody.html(renderMovies(filteredMovies));
+        }
 
         function userMovieSearch() {
             let userSearchInput = $('#search-box').val();
+            for(let movie of movieArray){
+                if((movie.title).includes(userSearchInput)){
             let apiUrl = `https://www.omdbapi.com/?apikey=${OMDB}&t=${userSearchInput}`;
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
                     if (data.Poster && data.Poster !== 'N/A') {
                         let posterUrl = data.Poster;
                         let posterElement = $('<img>').attr('src', posterUrl);
@@ -137,16 +142,15 @@
                     } else {
                         $('#poster-container').empty().text('No poster available.');
                     }
-                    $('#search-box').val('');
                 })
                 .catch(error => {
                     console.error(error);
                 });
+            }}
         }
 
         $('#titleEdit').on('click', editTitle => {
             let movieTitle = $('.selected-movie').text();
-            console.log(movieTitle);
             for (let movie of movieArray) {
                 if (movieTitle.trim() === movie.title) {
                     let movieName = $('#input-title').val()
@@ -158,7 +162,6 @@
                         body: JSON.stringify({title: movieName})
                     })
                         .then(resp => resp.json())
-                        .then(resp => console.log(resp))
                         .then(getMovieData);
                 }
             }
@@ -168,7 +171,6 @@
 
         $('#ratingEdit').on('click', editTitle => {
             let movieTitle = $('.selected-movie').text();
-            console.log(movieTitle);
             let movieRank = $('#input-rating').val()
             if ((movieRank > 0) && (movieRank < 6)) {
                 for (let movie of movieArray) {
@@ -181,7 +183,6 @@
                             body: JSON.stringify({rating: movieRank})
                         })
                             .then(resp => resp.json())
-                            .then(resp => console.log(resp))
                             .then($('.popUp').css('display', 'none'))
                             .then(getMovieData);
                     }

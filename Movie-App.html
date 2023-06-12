@@ -17,12 +17,10 @@
 <div class="container mt-5 mb-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <form>
             <div class="input-group mb-3">
                 <input id="search-box" type="text" class="form-control" placeholder="Search movie...">
                 <button class="btn btn-primary" id="search-button">Search</button>
             </div>
-            </form>
         </div>
     </div>
 
@@ -32,9 +30,8 @@
             <h2 class="card-title selected-movie"></h2>
             <!-- Other card elements -->
 
-            <!-- Form (Initially hidden) -->
+            <!-- (Initially hidden) -->
             <div class="form-container">
-                <form id="card-form">
                     <!-- Form fields -->
                     <input type="text" class="form-control mt-1 mx-1 editBox" id="input-title" placeholder="Edit Title">
                     <!-- Submit button -->
@@ -42,7 +39,6 @@
                     <input type="text" class="form-control mt-1 mx-1 editBox" id="input-rating" placeholder="Edit Rating">
                     <!-- Submit button -->
                     <button type="button" class="btn btn-primary mt-1 mx-1 mb-1" id="ratingEdit">Submit</button>
-                </form>
             </div>
         </div>
     </div>
@@ -54,14 +50,12 @@
     <div class="container mt-5 mb-5">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <form>
                 <div class="input-group mb-3">
                     <input id="add-movie-box" type="text" class="form-control" placeholder="Add a movie title">
                     <input id="movie-ranking" type="text" class="form-control" placeholder=" Rate: 1-5">
                     <button class="btn btn-primary" id="add-movie-button">Add Movie</button>
-                    <button class="btn btn-primary" id="delete-movie-button">Undo Last Movie</button>
+                    <button class="btn btn-primary" id="delete-movie-button">Delete Last Movie</button>
                 </div>
-                </form>
             </div>
         </div>
     </div>
