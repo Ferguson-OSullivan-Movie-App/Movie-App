@@ -13,10 +13,6 @@
 <body>
 <h1>Hello, world!</h1>
 
-<div class="loader-wrapper">
-<div class="loading">Loading&#8230;</div>
-</div>
-
 <!--***Movie Search Box***-->
 <div class="container mt-5 mb-5">
     <div class="row justify-content-center">
@@ -38,17 +34,16 @@
             <div class="form-container">
                 <form id="card-form">
                     <!-- Form fields -->
-                    <input type="text" id="input-field" placeholder="Enter a value">
+                    <input type="text" class="form-control mt-1 mx-1 editBox" id="input-title" placeholder="Edit Title">
                     <!-- Submit button -->
-                    <button type="submit">Submit</button>
+                    <button type="button" class="btn btn-primary mt-1 mx-1" id="titleEdit">Submit</button>
+                    <input type="text" class="form-control mt-1 mx-1 editBox" id="input-rating" placeholder="Edit Rating">
+                    <!-- Submit button -->
+                    <button type="button" class="btn btn-primary mt-1 mx-1 mb-1" id="ratingEdit">Submit</button>
                 </form>
             </div>
         </div>
     </div>
-
-
-
-
 
     <div class="row">
         <div class="col justify-content-center text-center" id="poster-container"></div>
@@ -61,15 +56,17 @@
                     <input id="add-movie-box" type="text" class="form-control" placeholder="Add a movie title">
                     <input id="movie-ranking" type="text" class="form-control" placeholder=" Rate: 1-5">
                     <button class="btn btn-primary" id="add-movie-button">Add Movie</button>
-                    <button class="btn btn-primary" id="delete-movie-button">Delete Movie</button>
+                    <button class="btn btn-primary" id="delete-movie-button">Undo Last Movie</button>
                 </div>
             </div>
         </div>
     </div>
 
 
-    <div class="row d-flex justify-content-evenly" id="movie-card">
-
+    <div class="row d-flex justify-content-evenly" id="movie-cards">
+        <div class="loader-wrapper">
+        <div class="loading">Loading&#8230;</div>
+    </div>
     </div>
 </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"

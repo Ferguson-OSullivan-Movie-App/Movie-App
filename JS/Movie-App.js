@@ -8,7 +8,7 @@
             $('.loader-wrapper').fadeOut();
         }
 
-        $(window).on('load', function (){
+        $(window).on('load', function () {
             $('.loader-wrapper').fadeOut()
         })
 
@@ -18,7 +18,9 @@
 
         function getMovieData() {
             movieArray = [];
-            movieId =[];
+            movieId = [];
+            $('#movie-card').html(`<div class="loader-wrapper">
+                <div class="loading">Loading&#8230;</div>`)
             return fetch(url)
                 .then((resp) => resp.json())
                 .then((data => {
@@ -30,7 +32,7 @@
                     console.log(movieArray)
                     console.log(movieId)
                     console.log(Math.max(...movieId));
-                    $('#movie-card').html(renderMovies(movieArray));
+                    $('#movie-cards').html(renderMovies(movieArray));
                     hideLoader()
                 }));
         }
@@ -44,6 +46,8 @@
             movieDataString += `<h5 class="card-title"> ${obj.rating} </h5>`
             movieDataString += `<h5 class="card-title"> ${obj.title} </h5>`
             movieDataString += '</div>'
+            movieDataString += `<h5 class="card-id"> ${obj.id} </h5>`
+            movieDataString += `<button class="btn btn-primary deletebtn">Delete</button>`
             movieDataString += '</div>'
             return movieDataString;
         }
@@ -57,18 +61,17 @@
         }
 
 
-        $('#movie-card').on('click', '.card', function() {
+        $('#movie-card').on('click', '.card', function () {
             var title = $(this).find('.card-title').text();
             $('.popUp').css('display', 'block');
             $('.selected-movie').text(title);
-        }).on('dblclick', '.card', function() {
+        }).on('dblclick', '.card', function () {
             $('.popUp').css('display', 'none');
         });
 
 
-
         $('#add-movie-button').on('click', addMovie => {
-            if(($('#movie-ranking').val() > 0) && ($('#movie-ranking').val() < 6)) {
+            if (($('#movie-ranking').val() > 0) && ($('#movie-ranking').val() < 6)) {
                 let userMovie = {
                     title: $('#add-movie-box').val(),
                     rating: $('#movie-ranking').val()
@@ -102,12 +105,20 @@
             }
         })
 
+        $('.deletebtn').on('click', deleteThisMovie => {
+            const $childElement = $(this).find('.card-id');
+            console.log($childElement.text())
+            // let confirmed = confirm('Deleting selected movie.')
+            // if(confirmed){
+            //     fetch(`https://freckle-attractive-group.glitch.me/movies/`
+            // }
+        })
+
         $('#search-button').on('click', userMovieSearch)
 
         function userMovieSearch() {
             let userSearchInput = $('#search-box').val();
             let apiUrl = `https://www.omdbapi.com/?apikey=${OMDB}&t=${userSearchInput}`;
-
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
@@ -126,12 +137,60 @@
                     console.error(error);
                 });
         }
+
+        $('#titleEdit').on('click', editTitle => {
+            let movieTitle = $('.selected-movie').text();
+            console.log(movieTitle);
+            for (let movie of movieArray) {
+                if (movieTitle.trim() === movie.title) {
+                    let movieName = $('#input-title').val()
+                    fetch(`https://freckle-attractive-group.glitch.me/movies/${movie.id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({title: movieName})
+                    })
+                        .then(resp => resp.json())
+                        .then(resp => console.log(resp))
+                        .then(getMovieData);
+                }
+            }
+        }).on('click', function () {
+            $('.popUp').css('display', 'none');
+        });
+
+        $('#ratingEdit').on('click', editTitle => {
+            let movieTitle = $('.selected-movie').text();
+            console.log(movieTitle);
+            let movieRank = $('#input-rating').val()
+            if ((movieRank > 0) && (movieRank < 6)) {
+                for (let movie of movieArray) {
+                    if (movieTitle.trim() === movie.title) {
+                        fetch(`https://freckle-attractive-group.glitch.me/movies/${movie.id}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({rating: movieRank})
+                        })
+                            .then(resp => resp.json())
+                            .then(resp => console.log(resp))
+                            .then($('.popUp').css('display', 'none'))
+                            .then(getMovieData);
+                    }
+                }
+            } else {
+                confirm('Enter a ranking between 1-5');
+            }
+        })
+        // .on('click', function() {
+        //     $('.popUp').css('display', 'none');
+        // });
+
+
     });
 })();
-
-
-
-
 
 
 //let userMovie = {

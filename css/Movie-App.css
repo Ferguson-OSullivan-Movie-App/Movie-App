@@ -122,3 +122,11 @@
     display: none;
 }
 
+.editBox{
+    width: 95%;
+}
+
+#card-id{
+    display: none;
+}
+
