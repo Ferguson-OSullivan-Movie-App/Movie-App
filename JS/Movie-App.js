@@ -43,11 +43,11 @@
             let movieDataString = '';
             movieDataString = '<div class="col-2 card hover" id="movie-card">'
             movieDataString += `<div class="card-body>`
-            movieDataString += `<h5 class="card-title"> ${obj.title} </h5>`
+            movieDataString += `<h1 class="card-title custom-title"> ${obj.title} </h1>`
             movieDataString += `<p class="card-subtitle"> Rating: ${obj.rating} </p>`
             movieDataString += '</div>'
             movieDataString += `<h5 class="card-id">${obj.id}</h5>`
-            movieDataString += `<button class="btn btn-primary deletebtn">Delete</button>`
+            movieDataString += `<button class="btn btn-sm btn-primary deletebtn">Delete</button>`
             movieDataString += '</div>'
             return movieDataString;
         }

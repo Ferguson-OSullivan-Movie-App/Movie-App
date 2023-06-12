@@ -1,3 +1,21 @@
+:root{
+    --primary-BG: #363445;
+    --dark-accent: #65707C;
+    --light-accent: #F3F6F9;
+    --rose-accent: #DB8880;
+}
+body {
+    background-color:  #363445;
+}
+
+.card {
+    background-color: var(--light-accent);
+}
+
+.dbl-click, h1 {
+    color: var(--rose-accent);
+}
+
 /* Absolute Center Spinner */
 .loading {
     position: fixed;
@@ -129,5 +147,7 @@
 .card-id{
     display: none;
 }
+
+
 
 
