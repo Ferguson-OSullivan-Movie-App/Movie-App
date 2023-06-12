@@ -1,8 +1,13 @@
 'use strict';
 
 (function () {
+    let apiUrl;
 
     $(document).ready(function () {
+
+        function hideLoader() {
+            $('.loader-wrapper').fadeOut();
+        }
 
         $(window).on('load', function (){
             $('.loader-wrapper').fadeOut()
@@ -20,6 +25,7 @@
                         movieArray.push(data[i])
                     }
                     $('#movie-card').html(renderMovies(movieArray));
+                    hideLoader()
                 }));
         }
 
@@ -81,7 +87,25 @@
 
         function userMovieSearch() {
             let userSearchInput = $('#search-box').val();
+            let apiUrl = `https://www.omdbapi.com/?apikey=${OMDB}&t=${userSearchInput}`;
 
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.Poster && data.Poster !== 'N/A') {
+                        let posterUrl = data.Poster;
+                        let posterElement = $('<img>').attr('src', posterUrl);
+                        let posterData = $(`<h6 class="mt-1">Director: ${data.Director}</h6>`)
+                        $('#poster-container').empty().append(posterElement, posterData);
+                        // $('#poster-container').append(posterData);
+                    } else {
+                        $('#poster-container').empty().text('No poster available.');
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
         }
     });
 })();
