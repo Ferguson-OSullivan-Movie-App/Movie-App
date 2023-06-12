@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-    let apiUrl;
 
     $(document).ready(function () {
 
@@ -14,16 +13,23 @@
         })
 
         let movieArray = [];
+        let movieId = [];
         let url = `https://freckle-attractive-group.glitch.me/movies`
 
         function getMovieData() {
             movieArray = [];
+            movieId =[];
             return fetch(url)
                 .then((resp) => resp.json())
                 .then((data => {
+                    console.log(data);
                     for (let i = 0; i < data.length; i++) {
                         movieArray.push(data[i])
+                        movieId.push(data[i].id)
                     }
+                    console.log(movieArray)
+                    console.log(movieId)
+                    console.log(Math.max(...movieId));
                     $('#movie-card').html(renderMovies(movieArray));
                     hideLoader()
                 }));
@@ -34,7 +40,7 @@
         function buildMovieData(obj) {
             let movieDataString = '';
             movieDataString = '<div class="col-2 card" id="movie-card">'
-            movieDataString += `<div class=" card-body>`
+            movieDataString += `<div class="card-body>`
             movieDataString += `<h5 class="card-title"> ${obj.rating} </h5>`
             movieDataString += `<h5 class="card-title"> ${obj.title} </h5>`
             movieDataString += '</div>'
@@ -74,13 +80,16 @@
         })
 
         $('#delete-movie-button').on('click', deleteMovie => {
-            let lastMovie = movieArray.length
-            fetch(`https://freckle-attractive-group.glitch.me/movies/${lastMovie}`, {
-                method: "DELETE",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }).then(getMovieData);
+            let lastMovie = Math.max(...movieId);
+            let confirmed = confirm('Deleting the last movie.')
+            if (confirmed) {
+                fetch(`https://freckle-attractive-group.glitch.me/movies/${lastMovie}`, {
+                    method: "DELETE",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }).then(getMovieData);
+            }
         })
 
         $('#search-button').on('click', userMovieSearch)
