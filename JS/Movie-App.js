@@ -43,8 +43,8 @@
             let movieDataString = '';
             movieDataString = '<div class="col-2 card hover" id="movie-card">'
             movieDataString += `<div class="card-body>`
-            movieDataString += `<h5 class="card-title"> ${obj.rating} </h5>`
             movieDataString += `<h5 class="card-title"> ${obj.title} </h5>`
+            movieDataString += `<p class="card-subtitle"> Rating: ${obj.rating} </p>`
             movieDataString += '</div>'
             movieDataString += `<h5 class="card-id">${obj.id}</h5>`
             movieDataString += `<button class="btn btn-primary deletebtn">Delete</button>`
@@ -60,26 +60,11 @@
             return movieDataString
         }
 
-
-        // $('#movie-card').on('click', '.card', function () {
-        //     var title = $(this).find('.card-title').text();
-        //     $('.popUp').css('display', 'block');
-        //     $('.selected-movie').text(title);
-        // }).on('dblclick', '.card', function () {
-        //     $('.popUp').css('display', 'none');
-        // });
-
         $('#movie-cards').on('dblclick', '.card', function() {
             var title = $(this).find('.card-title').text();
             $('.popUp').toggle();
             $('.selected-movie').text(title);
         })
-
-            // .on('click', '.card', function() {
-        //     $('.popUp').css('display', 'none');
-        // });
-
-
 
         $('#add-movie-button').on('click', addMovie => {
             if (($('#movie-ranking').val() > 0) && ($('#movie-ranking').val() < 6)) {
@@ -98,6 +83,8 @@
                     .then(response => console.log(response))
                     .then(getMovieData)
                     .catch(error => console.error(error));
+                $('#add-movie-box').val('');
+                $('#movie-ranking').val('');
             } else {
                 alert('Please Enter A Number Between 1-5');
             }
@@ -116,15 +103,6 @@
             }
         })
 
-        /////////////////////
-        // $('.deletebtn').on('click', deleteThisMovie => {
-        //     const $childElement = $(this).find('.card-id');
-        //     console.log($childElement.text())
-            // let confirmed = confirm('Deleting selected movie.')
-            // if(confirmed){
-            //     fetch(`https://freckle-attractive-group.glitch.me/movies/`
-            // }
-        // })
         $('#movie-cards').on('click', '.deletebtn', function() {
             const $cardElement = $(this).closest('.card');
             const movieId = $cardElement.find('.card-id').text();
@@ -142,8 +120,6 @@
             }
         });
 
-
-
         $('#search-button').on('click', userMovieSearch)
 
         function userMovieSearch() {
@@ -158,10 +134,10 @@
                         let posterElement = $('<img>').attr('src', posterUrl);
                         let posterData = $(`<h6 class="mt-1">Director: ${data.Director}</h6>`)
                         $('#poster-container').empty().append(posterElement, posterData);
-                        // $('#poster-container').append(posterData);
                     } else {
                         $('#poster-container').empty().text('No poster available.');
                     }
+                    $('#search-box').val('');
                 })
                 .catch(error => {
                     console.error(error);
@@ -214,26 +190,5 @@
                 confirm('Enter a ranking between 1-5');
             }
         })
-        // .on('click', function() {
-        //     $('.popUp').css('display', 'none');
-        // });
-
-
     });
 })();
-
-
-//let userMovie = {
-//                 title: $('#add-movie-box').val(),
-//                 rating: $('#movie-ranking').val()
-//             }
-//             const options = {
-//                 method: 'DELETE',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                 },
-//                 body: JSON.stringify(userMovie),
-//             }
-//             fetch(url,options)
-//                 .then(response => response.json())
-//                 .then(getMovieData);
