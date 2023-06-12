@@ -46,7 +46,7 @@
             movieDataString += `<h5 class="card-title"> ${obj.rating} </h5>`
             movieDataString += `<h5 class="card-title"> ${obj.title} </h5>`
             movieDataString += '</div>'
-            movieDataString += `<h5 class="card-id"> ${obj.id} </h5>`
+            movieDataString += `<h5 class="card-id">${obj.id}</h5>`
             movieDataString += `<button class="btn btn-primary deletebtn">Delete</button>`
             movieDataString += '</div>'
             return movieDataString;
@@ -61,13 +61,24 @@
         }
 
 
-        $('#movie-card').on('click', '.card', function () {
+        // $('#movie-card').on('click', '.card', function () {
+        //     var title = $(this).find('.card-title').text();
+        //     $('.popUp').css('display', 'block');
+        //     $('.selected-movie').text(title);
+        // }).on('dblclick', '.card', function () {
+        //     $('.popUp').css('display', 'none');
+        // });
+
+        $('#movie-cards').on('dblclick', '.card', function() {
             var title = $(this).find('.card-title').text();
-            $('.popUp').css('display', 'block');
+            $('.popUp').toggle();
             $('.selected-movie').text(title);
-        }).on('dblclick', '.card', function () {
-            $('.popUp').css('display', 'none');
-        });
+        })
+
+            // .on('click', '.card', function() {
+        //     $('.popUp').css('display', 'none');
+        // });
+
 
 
         $('#add-movie-button').on('click', addMovie => {
@@ -105,14 +116,33 @@
             }
         })
 
-        $('.deletebtn').on('click', deleteThisMovie => {
-            const $childElement = $(this).find('.card-id');
-            console.log($childElement.text())
+        /////////////////////
+        // $('.deletebtn').on('click', deleteThisMovie => {
+        //     const $childElement = $(this).find('.card-id');
+        //     console.log($childElement.text())
             // let confirmed = confirm('Deleting selected movie.')
             // if(confirmed){
             //     fetch(`https://freckle-attractive-group.glitch.me/movies/`
             // }
-        })
+        // })
+        $('#movie-cards').on('click', '.deletebtn', function() {
+            const $cardElement = $(this).closest('.card');
+            const movieId = $cardElement.find('.card-id').text();
+            console.log(movieId);
+            const confirmed = confirm('Deleting selected movie.');
+
+            if (confirmed) {
+                fetch(`https://freckle-attractive-group.glitch.me/movies/${movieId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then(getMovieData);
+            }
+        });
+
+
 
         $('#search-button').on('click', userMovieSearch)
 
