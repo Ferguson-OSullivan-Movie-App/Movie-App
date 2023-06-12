@@ -117,3 +117,8 @@
         transform: rotate(360deg);
     }
 }
+
+.popUp {
+    display: none;
+}
+

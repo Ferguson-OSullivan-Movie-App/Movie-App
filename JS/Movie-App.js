@@ -39,7 +39,7 @@
 
         function buildMovieData(obj) {
             let movieDataString = '';
-            movieDataString = '<div class="col-2 card" id="movie-card">'
+            movieDataString = '<div class="col-2 card hover" id="movie-card">'
             movieDataString += `<div class="card-body>`
             movieDataString += `<h5 class="card-title"> ${obj.rating} </h5>`
             movieDataString += `<h5 class="card-title"> ${obj.title} </h5>`
@@ -55,6 +55,16 @@
             }
             return movieDataString
         }
+
+
+        $('#movie-card').on('click', '.card', function() {
+            var title = $(this).find('.card-title').text();
+            $('.popUp').css('display', 'block');
+            $('.selected-movie').text(title);
+        }).on('dblclick', '.card', function() {
+            $('.popUp').css('display', 'none');
+        });
+
 
 
         $('#add-movie-button').on('click', addMovie => {
