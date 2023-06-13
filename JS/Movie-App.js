@@ -2,7 +2,7 @@
 
 (function () {
 
-    $(document).ready(function () {
+        // -----Animation Functions
 
         function hideLoader() {
             $('.loader-wrapper').fadeOut();
@@ -12,10 +12,16 @@
             $('.loader-wrapper').fadeOut()
         })
 
+        // -----Variables-----
+
         let movieArray = [];
         let movieId = [];
         let url = `https://freckle-attractive-group.glitch.me/movies`
         let cardBody = $('#movie-cards')
+
+        // -----Main Functions-----
+
+        // -----Get Movie Information-----
 
         function getMovieData() {
             movieArray = [];
@@ -34,7 +40,11 @@
                 }));
         }
 
+        // ----------
+
         getMovieData();
+
+        // -----Build Movie Cards-----
 
         function buildMovieData(obj) {
             let movieDataString = '';
@@ -44,10 +54,12 @@
             movieDataString += `<h5 class="card-title"> Rating: ${obj.rating} </h5>`
             movieDataString += '</div>'
             movieDataString += `<h5 class="card-id">${obj.id}</h5>`
-            movieDataString += `<button class="btn btn-primary deletebtn">Delete</button>`
+            movieDataString += `<button class="btn mb-1 deletebtn">Delete</button>`
             movieDataString += '</div>'
             return movieDataString;
         }
+
+        // -----Render Cards Onto The Page-----
 
         function renderMovies(objElement) {
             let movieDataString = '';
@@ -57,11 +69,7 @@
             return movieDataString
         }
 
-        $('#movie-cards').on('dblclick', '.card', function () {
-            var title = $(this).find('.movie-title').text();
-            $('.popUp').toggle();
-            $('.selected-movie').text(title);
-        })
+        // -----Add Movie Function-----
 
         $('#add-movie-button').on('click', addMovie => {
             if (($('#movie-ranking').val() > 0) && ($('#movie-ranking').val() < 6)) {
@@ -79,10 +87,14 @@
                 fetch(url, options)
                     .then(getMovieData)
                     .catch(error => console.error(error));
+                $('#add-movie-box').val('');
+                $('#movie-ranking').val('');
             } else {
                 alert('Please Enter A Number Between 1-5');
             }
         })
+
+        // -----Delete Function-----
 
         $('#delete-movie-button').on('click', deleteMovie => {
             let lastMovie = Math.max(...movieId);
@@ -97,20 +109,7 @@
             }
         })
 
-        $('#movie-cards').on('click', '.deletebtn', function () {
-            const $cardElement = $(this).closest('.card');
-            const movieId = $cardElement.find('.card-id').text();
-            const confirmed = confirm('Deleting selected movie.');
-            if (confirmed) {
-                fetch(`https://freckle-attractive-group.glitch.me/movies/${movieId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                })
-                    .then(getMovieData);
-            }
-        });
+        //-----Search Functions-----
 
         $('#search-button').on('click', searchMovies).on('click', userMovieSearch)
 
@@ -126,34 +125,48 @@
             cardBody.html(renderMovies(filteredMovies));
         }
 
+        //----------
+
         function userMovieSearch() {
             let userSearchInput = $('#search-box').val();
-            for(let movie of movieArray){
-                if((movie.title).includes(userSearchInput)){
-            let apiUrl = `https://www.omdbapi.com/?apikey=${OMDB}&t=${userSearchInput}`;
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.Poster && data.Poster !== 'N/A') {
-                        let posterUrl = data.Poster;
-                        let posterElement = $('<img>').attr('src', posterUrl);
-                        let posterData = $(`<h6 class="mt-1">Director: ${data.Director}</h6>`)
-                        $('#poster-container').empty().append(posterElement, posterData);
-                    } else {
-                        $('#poster-container').empty().text('No poster available.');
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-            }}
+            for (let movie of movieArray) {
+                if ((movie.title).includes(userSearchInput)) {
+                    let apiUrl = `https://www.omdbapi.com/?apikey=${OMDB}&t=${userSearchInput}`;
+                    fetch(apiUrl)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.Poster && data.Poster !== 'N/A') {
+                                let posterUrl = data.Poster;
+                                let posterElement = $('<img>').attr('src', posterUrl);
+                                let posterData = $(`<h6 class="mt-1 director">Director: ${data.Director}</h6>`)
+                                $('#poster-container').empty().append(posterElement, posterData);
+                            } else {
+                                $('#poster-container').empty().text('No poster available.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                }
+            }
         }
+
+        // -----Edit Functions-----
+
+        // -----PopUp-----
+        $('#movie-cards').on('dblclick', '.card', function () {
+            let title = $(this).find('.movie-title').text();
+            $('.popUp').toggle();
+            $('.selected-movie').text(title);
+        })
+
+        // ----------
 
         $('#titleEdit').on('click', editTitle => {
             let movieTitle = $('.selected-movie').text();
             for (let movie of movieArray) {
-                if (movieTitle.trim() === movie.title) {
-                    let movieName = $('#input-title').val()
+                if (movieTitle.trim() === (movie.title).trim()) {
+                    let movieName = $('#edit-title').val()
                     fetch(`https://freckle-attractive-group.glitch.me/movies/${movie.id}`, {
                         method: 'PATCH',
                         headers: {
@@ -163,15 +176,18 @@
                     })
                         .then(resp => resp.json())
                         .then(getMovieData);
+                    $('#edit-title').val('');
                 }
             }
         }).on('click', function () {
             $('.popUp').css('display', 'none');
         });
 
+        //----------
+
         $('#ratingEdit').on('click', editTitle => {
             let movieTitle = $('.selected-movie').text();
-            let movieRank = $('#input-rating').val()
+            let movieRank = $('#edit-rating').val()
             if ((movieRank > 0) && (movieRank < 6)) {
                 for (let movie of movieArray) {
                     if (movieTitle.trim() === movie.title) {
@@ -185,11 +201,11 @@
                             .then(resp => resp.json())
                             .then($('.popUp').css('display', 'none'))
                             .then(getMovieData);
+                        $('#edit-rating').val('');
                     }
                 }
             } else {
                 confirm('Enter a ranking between 1-5');
             }
         })
-    });
 })();

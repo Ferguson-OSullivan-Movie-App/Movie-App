@@ -1,11 +1,12 @@
-:root{
+:root {
     --primary-BG: #363445;
     --dark-accent: #65707C;
     --light-accent: #F3F6F9;
     --rose-accent: #DB8880;
 }
+
 body {
-    background-color:  #363445;
+    background-color: #363445;
 }
 
 .card {
@@ -39,7 +40,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 /* :not(:required) hides these rules from IE9 and below */
@@ -87,6 +88,7 @@ body {
         transform: rotate(360deg);
     }
 }
+
 @-moz-keyframes spinner {
     0% {
         -webkit-transform: rotate(0deg);
@@ -103,6 +105,7 @@ body {
         transform: rotate(360deg);
     }
 }
+
 @-o-keyframes spinner {
     0% {
         -webkit-transform: rotate(0deg);
@@ -119,6 +122,7 @@ body {
         transform: rotate(360deg);
     }
 }
+
 @keyframes spinner {
     0% {
         -webkit-transform: rotate(0deg);
@@ -140,12 +144,27 @@ body {
     display: none;
 }
 
-.editBox{
+.editBox {
     width: 95%;
 }
 
-.card-id{
+.card-id {
     display: none;
+}
+
+.btn {
+    background-color: var(--rose-accent);
+    border: 0;
+    color: white;
+}
+
+.btn:hover {
+    background-color: var(--dark-accent);
+    color: white;
+}
+
+.director {
+    color: white;
 }
 
 
